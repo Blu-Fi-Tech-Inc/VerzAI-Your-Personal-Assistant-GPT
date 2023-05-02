@@ -94,7 +94,6 @@ body {
 
   max-width: 100%;
   overflow-x: scroll;
-
   /*
    * white space refers to any spaces, tabs, or newline characters that are used to format the CSS code
    * specifies how white space within an element should be handled. It is similar to the "pre" value, which tells the browser to treat all white space as significant and to preserve it exactly as it appears in the source code.
@@ -147,4 +146,42 @@ button {
 form img {
   width: 30px;
   height: 30px;
+}
+
+footer {
+  background: transparent;
+  display: ruby-base-container;
+  margin-left: 1rem;
+}
+
+/*Navbar*/
+.navbar {
+  background: transparent;
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+}
+
+.navbar ul {
+  list-style-type: square;
+  color: #00ffd9;
+  display: -webkit-box;
+}
+
+.navbar ul li {
+  margin-left: 1rem;
+  margin-top: 0.1rem;
+  margin-bottom: 0.4rem;
+}
+
+.navbar a {
+  color: #e692ff;
+  text-decoration: underline;
+  font-size: 1.3rem;
+}
+
+.navbar a:hover {
+  text-decoration-style: wavy;
+  text-decoration-color: cyan;
+  color: rgb(255, 0, 144);
 }
