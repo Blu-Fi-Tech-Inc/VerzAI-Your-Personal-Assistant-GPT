@@ -60,52 +60,58 @@ function chatStripe (isAi, value, uniqueId) {
 
 const handleSubmit = async (e) => {
     e.preventDefault();
-
+  
     const data = new FormData(form);
-
+  
     // user's chatstripe
-    chatContainer.innerHTML += chatStripe(false, data.get('propmt'));
-
+    const userMessage = data.get('prompt');
+    chatContainer.innerHTML += chatStripe(false, userMessage);
+    
     form.reset();
-
+  
     // bot's chatstripe
     const uniqueId = generateUniqueId();
-    chatContainer.innerHTML += chatStripe(true, " ", uniqueId);
-
+    chatContainer.innerHTML += chatStripe(true, '', uniqueId);
+  
     chatContainer.scrollTop = chatContainer.scrollHeight;
-
+  
     const messageDiv = document.getElementById(uniqueId);
-
+  
     loader(messageDiv);
-
-    // fetch data from server -> bot's response
-
-    const response = await fetch('https://verzai-your-personal-assistant-gpt.onrender.com', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({
-            prompt: data.get('prompt')
-        })
+  
+    // Fetch data from server -> bot's response
+    const response = await fetch('http://localhost:5000', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        prompt: userMessage
+      })
     })
-
+  
     clearInterval(loadInterval);
     messageDiv.innerHTML = '';
-
-    if(response.ok) {
-        const data = await response.json();
-        const parsedData = data.bot.trim();
-
-        typeText(messageDiv, parsedData);
-    }   else {
-        const err = await response.text();
-
-        messageDiv.innerHTML = "Cannot compute...cannot compute";
-
-        alert(err);
+  
+    if (response.ok) {
+      const data = await response.json();
+      const parsedData = data.bot.trim();
+  
+      typeText(messageDiv, parsedData);
+  
+      // Save conversation data to local storage
+      const conversation = { user: userMessage, bot: parsedData };
+      const conversationHistory = JSON.parse(localStorage.getItem('conversationHistory')) || [];
+      conversationHistory.push(conversation);
+      localStorage.setItem('conversationHistory', JSON.stringify(conversationHistory));
+    } else {
+      const err = await response.text();
+  
+      messageDiv.innerHTML = 'Cannot compute...cannot compute';
+  
+      alert(err);
     }
-}
+  }
 
 form.addEventListener('submit', handleSubmit);
 form.addEventListener('keyup', (e) => {
